@@ -1,0 +1,17 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+a.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-weight: 600;
+  transform: translateX(4px);
+}
+
+a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
