@@ -1,0 +1,55 @@
+app:
+  schedule:
+    refresh-token-cleanup-cron: 0 0 1 * * *
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
+
+jwt:
+  public:
+    key: ${JWT_PUBLIC_KEY_PATH}
+    token-expiration-minutes: ${ACCESS_TOKEN_EXPIRATION_MINUTES}
+  private:
+    key: ${JWT_PRIVATE_KEY_PATH}
+  refresh:
+    token-expiration-minutes: ${REFRESH_TOKEN_EXPIRATION_MINUTES}
+
+spring:
+  application:
+    name: backend
+
+  output:
+    ansi:
+      enabled: always
+
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    defer-datasource-initialization: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: none
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    clean-before-migrate: true
+    clean-disabled: false
+    enabled: true
+    url: ${DB_URL}
+    user: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  logging:
+    level:
+      root: INFO
+      com.fms.backend: DEBUG
