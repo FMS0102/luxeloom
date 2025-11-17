@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    env_file:
+      - ./secrets/.env
+    volumes:
+      - ./secrets/app.pub:/app/secrets/app.pub:ro
+      - ./secrets/private.pem:/app/secrets/private.pem:ro
+    depends_on:
+      - database
+    expose:
+      - "8080"
+    networks:
+      - app-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 384m
+          cpus: "0.4"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: react-app
+    expose:
+      - "80"
+    networks:
+      - app-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.3"
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-proxy/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 96m
+          cpus: "0.2"
+
+  database:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: luxeloom_db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
