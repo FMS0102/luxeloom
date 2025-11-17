@@ -3,6 +3,11 @@ import BASE_URL from "./config";
 
 export const USERS_API = `${BASE_URL}/api/users`;
 
+export async function getMe() {
+    const res = await authFetch(`${USERS_API}/me`);
+    return await res.json();
+}
+
 export async function findAllUsers() {
     const res = await authFetch(USERS_API);
     return await res.json();

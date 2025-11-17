@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
 import Chart from "chart.js/auto"
 import { fetchDashboard } from "../api/auth"
+import { getMe } from "../api/user"
 import { authFetch } from "../api/apiClient"
 
-// URL para buscar o usuário logado
-const ME_API_URL = "http://localhost:8080/api/users/me"
-// URL para buscar os dados do dashboard
-//const DASHBOARD_API_URL = "http://localhost:8080/api/sale/dashboard"
 
 export default function DashboardPage() {
   const [data, setData] = useState(null)
@@ -23,16 +20,16 @@ export default function DashboardPage() {
     // Função para buscar dados da API do USUÁRIO (ME_API_URL)
     const fetchUserData = async () => {
       try {
-        // Usa authFetch para a rota protegida
-        const res = await authFetch(ME_API_URL)
-        const user = await res.json()
+
+        const data = await getMe()
+        const user = data
 
         if (user && user.name) {
           setUserName(user.name.split(" ")[0] || "Usuário")
         }
       } catch (err) {
         // O erro aqui será tratado pelo authFetch (se for 401/refresh fail, já redireciona)
-        console.error(`Erro ao buscar ${ME_API_URL}:`, err)
+        console.error(`Erro ao carregar usuário`, err)
       }
     }
 
