@@ -22,6 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasAuthority('SCOPE_BASIC') or hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<UserMeResponseDTO> getAuthenticatedUser(){
         return ResponseEntity.ok().body(userService.getAuthenticatedUser());
     }
